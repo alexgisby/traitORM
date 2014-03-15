@@ -1,6 +1,8 @@
 <?php
 
 namespace Solution10\traitORM\Tests;
+use Doctrine\DBAL\Configuration as DBALConfiguration;
+use Doctrine\DBAL\DriverManager;
 use Solution10\traitORM\Tests\Stubs\User as UserStub;
 
 /**
@@ -161,4 +163,14 @@ class ActiveRecordTest extends Util\TestCase
             'email' => 'alex@solution10.com',
         ], $object->get(['name', 'email']));
     }
+
+    public function testSetGetConnectionName()
+    {
+        $object = $this->_newTraitObject();
+        $this->assertEquals('default', $object->connectionName());
+
+        $this->assertEquals($object, $object->connectionName('secondary'));
+        $this->assertEquals('secondary', $object->connectionName());
+    }
+
 }

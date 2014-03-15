@@ -21,6 +21,11 @@ trait ActiveRecord
     protected $_changed = [];
 
     /**
+     * @var     string  Name of the database connection for this model
+     */
+    protected $_connectionName = 'default';
+
+    /**
      * Magic set
      *
      * @param   string  $name   Name of the property to set
@@ -143,6 +148,22 @@ trait ActiveRecord
             $this->_original[$key] = $value;
         }
         return true;
+    }
+
+    /**
+     * Sets/Gets the connection name for this class to use. When needed, the connection is
+     * loaded from the Solution10\traitORM\ConnectionManager
+     *
+     * @param   string|null  $name   Pass a string to set the name, or null to get it
+     * @return  $this|string
+     */
+    public function connectionName($name = null)
+    {
+        if($name === null) {
+            return $this->_connectionName;
+        }
+        $this->_connectionName = $name;
+        return $this;
     }
 
 }
