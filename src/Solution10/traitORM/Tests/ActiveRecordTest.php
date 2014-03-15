@@ -1,5 +1,7 @@
 <?php
+
 namespace Solution10\traitORM\Tests;
+use Solution10\traitORM\Tests\Stubs\User as UserStub;
 
 /**
  * Active Record Tests
@@ -82,5 +84,81 @@ class ActiveRecordTest extends Util\TestCase
         $object->save();
         $object->name = 'Alexander';
         $this->assertEquals('Alexander', $object->name);
+    }
+
+    public function testGetWithModelProperties()
+    {
+        // This object
+        $object = new UserStub();
+        $this->assertEquals($object->publicName, 'Alice');
+    }
+
+    /**
+     * These should be set-able, but not appear in diffs etc
+     */
+    public function testSetWithModelProperties()
+    {
+        $object = new UserStub();
+
+        $object->publicName = 'Allison';
+        $this->assertEquals('Allison', $object->publicName);
+        $this->assertEquals([], $object->diff());
+    }
+
+    public function testIssetWithProperties()
+    {
+        $object = new UserStub();
+        $this->assertTrue(isset($object->publicName));
+        $this->assertFalse(isset($object->protectedName));
+        $this->assertFalse(isset($object->privateName));
+    }
+
+    /**
+     * Testing the set function, rather than the magic set
+     */
+    public function testSetMethodNameValue()
+    {
+        $object = $this->_newTraitObject();
+        $object->set('name', 'Alex');
+
+        $this->assertEquals('Alex', $object->name);
+    }
+
+    public function testSetMethodArray()
+    {
+        $object = $this->_newTraitObject();
+        $object->set([
+            'name' => 'Alex',
+            'email' => 'alex@solution10.com'
+        ]);
+
+        $this->assertEquals('Alex', $object->name);
+        $this->assertEquals('alex@solution10.com', $object->email);
+    }
+
+    /**
+     * Testing the get() function rather than magic get
+     */
+    public function testGetMethodString()
+    {
+        $object = $this->_newTraitObject();
+        $object->name = 'Alex';
+
+        $this->assertEquals('Alex', $object->get('name'));
+    }
+
+    public function testGetMethodArray()
+    {
+        $object = $this->_newTraitObject();
+        $object->set([
+            'name' => 'Alex',
+            'email' => 'alex@solution10.com',
+            'location' => 'London',
+        ]);
+
+        $this->assertEquals([
+            'name' => 'Alex',
+            'email' => 'alex@solution10.com',
+        ], $object->get(['name', 'email']));
     }
 }

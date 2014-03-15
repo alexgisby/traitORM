@@ -21,13 +21,6 @@ trait ActiveRecord
     protected $_changed = [];
 
     /**
-     * Sets data to the model.
-     *
-     * @param   array|string    $name   Either the name of the field to set, or a key-value array
-     * @param   mixed|null      $value  Either the name of te
-     */
-
-    /**
      * Magic set
      *
      * @param   string  $name   Name of the property to set
@@ -38,7 +31,6 @@ trait ActiveRecord
     {
         $this->_changed[$name] = $value;
     }
-
 
     /**
      * Magic get. Will return the item in the model with this key,
@@ -66,9 +58,51 @@ trait ActiveRecord
      * @param   string  $name   Name of the property to check
      * @return  bool
      */
-    function __isset($name)
+    public function __isset($name)
     {
         return (isset($this->_original[$name]) || isset($this->_changed[$name]));
+    }
+
+    /**
+     * Allows you to set values through a method either one by one, or with
+     * a keyed array.
+     *
+     * @param   string|array    $name   Either the name of the field to set, or the key-value array
+     * @param   mixed           $value  Either the value, or leave null if you're using an array
+     * @return  $this
+     */
+    public function set($name, $value = null)
+    {
+        if(!is_array($name)) {
+            $name = [$name => $value];
+        }
+        foreach($name as $field => $value) {
+            // Hand off to magic set.
+            $this->$field = $value;
+        }
+        return $this;
+    }
+
+    /**
+     * Allows you to get a value through a method, or you can retrieve multiple values at
+     * once, by providing an array.
+     *
+     * @param   string|array    $name   Either a single field name, or an array of them
+     * @return  mixed                   Could be anything really
+     */
+    public function get($name)
+    {
+        if(!is_array($name)) {
+            return $this->$name;
+        } else {
+            $values = [];
+            foreach($name as $n) {
+                if(isset($this->$n)) {
+                    $values[$n] = $this->$n;
+                }
+            }
+            return $values;
+        }
     }
 
     /**
