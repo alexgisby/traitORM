@@ -1,22 +1,27 @@
 <?php
 
 namespace Solution10\traitORM;
-use Doctrine\DBAL\Connection;
+use Solution10\traitORM\StorageDelegate;
 
 /**
  * Class Repository
  *
- * Trait that eases the use of the Repository pattern.
- * This sucker does all the saving and loading you would want.
+ * Add this trait to a class to make it become a "Repository".
+ * Repos handle the saving and loading of items within it, and they
+ * delegate the actual saving and loading to StorageDelegate implementers.
+ * This means that your repo can be powered by anything, a REST API or
+ * a database. Your choice my friend.
  *
- * @package Solution10\traitORM
+ * @package     Solution10\traitORM
+ * @author      Alex Gisby <alex@solution10.com>
+ * @license     MIT
  */
 trait Repository
 {
     /**
-     * @var Connection
+     * @var StorageDelegate
      */
-    protected $_conn;
+    protected $_storage;
 
     abstract public function tableName();
     abstract public function itemFactory($rawData);
@@ -26,9 +31,9 @@ trait Repository
         return 'id';
     }
 
-    public function setConnection(Connection $conn)
+    public function setConnection(StorageDelegate $storage)
     {
-        $this->_conn = $conn;
+        $this->_storage = $storage;
     }
 
     /**
@@ -48,7 +53,7 @@ trait Repository
         $sql = 'INSERT INTO ' . $this->tableName() . ' SET ';
         $sql .= implode(' = ?, ', array_keys($item->getChanges())) . ' = ?';
 
-        $stmt = $this->_conn->prepare($sql);
+        $stmt = $this->_storage->prepare($sql);
         foreach(array_values($item->getChanges()) as $idx => $value) {
             $stmt->bindValue($idx + 1, $value);
         }
@@ -56,7 +61,7 @@ trait Repository
         $result = $stmt->execute();
 
         // Grab the insert ID to flesh out this model:
-        $iid = $this->_conn->lastInsertId();
+        $iid = $this->_storage->lastInsertId();
         $item->setValue($this->primaryKey(), $iid);
         $item->setAsSaved();
 
@@ -71,7 +76,7 @@ trait Repository
         $sql .= implode(' = ?, ', array_keys($changed)) . ' = ?';
         $sql .= ' WHERE ' . $this->primaryKey() . ' = ?';
 
-        $stmt = $this->_conn->prepare($sql);
+        $stmt = $this->_storage->prepare($sql);
         foreach(array_values($changed) as $idx => $value) {
             $stmt->bindValue($idx + 1, $value);
         }
@@ -95,7 +100,7 @@ trait Repository
      */
     public function findById($id)
     {
-        $query = $this->_conn->prepare('
+        $query = $this->_storage->prepare('
             SELECT
                 *
             FROM
