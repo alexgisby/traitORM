@@ -7,39 +7,39 @@ class RepoItemTest extends Util\TestCase
     /**
      * @return object Solution10\traitORM\RepoItem
      */
-    protected function _newTraitObject()
+    protected function newTraitObject()
     {
         return $this->getObjectForTrait('Solution10\\traitORM\\RepoItem');
     }
 
     public function testObjectImplementsRepoItem()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertArrayHasKey('Solution10\\traitORM\\RepoItem', class_uses($object));
     }
 
     public function testSetValue()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertEquals($object, $object->setValue('name', 'Alex'));
     }
 
     public function testSetGetValue()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->setValue('name', 'Alex');
         $this->assertEquals('Alex', $object->getValue('name'));
     }
 
     public function testGetUnknownValue()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertNull($object->getValue('unknown'));
     }
 
     public function testSetValues()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertEquals($object, $object->setValues([
             'name' => 'Alex',
             'faveColour' => 'red',
@@ -51,7 +51,7 @@ class RepoItemTest extends Util\TestCase
 
     public function testIsValueSet()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertFalse($object->isValueSet('name'));
         $object->setValue('name', 'Alex');
         $this->assertTrue($object->isValueSet('name'));
@@ -59,7 +59,7 @@ class RepoItemTest extends Util\TestCase
 
     public function testSetAsSaved()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->setValue('name', 'Alex');
 
         // Test that name remains after save:
@@ -69,7 +69,7 @@ class RepoItemTest extends Util\TestCase
 
     public function testChanges()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->setValue('name', 'Alex');
 
         $this->assertTrue($object->hasChanges());
@@ -80,7 +80,7 @@ class RepoItemTest extends Util\TestCase
 
     public function testSaveClearsChanges()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->setValues(['name' => 'Alex', 'city' => 'London']);
 
         $this->assertTrue($object->hasChanges());
@@ -91,7 +91,7 @@ class RepoItemTest extends Util\TestCase
 
     public function testLoadFromRepoResource()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
 
         $object->loadFromRepoResource([
             'name' => 'Alex',
@@ -110,7 +110,7 @@ class RepoItemTest extends Util\TestCase
 
     public function testGetOriginal()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->loadFromRepoResource([
             'name' => 'Alex',
             'city' => 'London',
@@ -123,7 +123,7 @@ class RepoItemTest extends Util\TestCase
 
     public function testGetOriginalPostSave()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->loadFromRepoResource([
             'name' => 'Alex',
             'city' => 'London',

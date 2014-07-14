@@ -29,7 +29,7 @@ trait RepoItem
      */
     public function loadFromRepoResource(array $initialData)
     {
-        foreach($initialData as $key => $value) {
+        foreach ($initialData as $key => $value) {
             $this->_original[$key] = $value;
         }
         return $this;
@@ -56,7 +56,7 @@ trait RepoItem
      */
     public function setValues(array $data)
     {
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $this->_changed[$key] = $value;
         }
         return $this;
@@ -72,9 +72,9 @@ trait RepoItem
      */
     public function getValue($key)
     {
-        if(array_key_exists($key, $this->_changed)) {
+        if (array_key_exists($key, $this->_changed)) {
             return $this->_changed[$key];
-        } elseif(array_key_exists($key, $this->_original)) {
+        } elseif (array_key_exists($key, $this->_original)) {
             return $this->_original[$key];
         }
         return null;
@@ -140,7 +140,7 @@ trait RepoItem
      */
     public function setAsSaved()
     {
-        foreach($this->_changed as $key => $value) {
+        foreach ($this->_changed as $key => $value) {
             $this->_original[$key] = $value;
         }
         $this->_changed = array();

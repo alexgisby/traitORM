@@ -7,33 +7,33 @@ class MagicRepoItemTest extends Util\TestCase
     /**
      * @return object Solution10\traitORM\MagicRepoItem
      */
-    protected function _newTraitObject()
+    protected function newTraitObject()
     {
         return $this->getObjectForTrait('Solution10\\traitORM\\MagicRepoItem');
     }
 
     public function testObjectImplementsRepoItem()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertArrayHasKey('Solution10\\traitORM\\MagicRepoItem', class_uses($object));
     }
 
     public function testSetGetValue()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->name = 'Alex';
         $this->assertEquals('Alex', $object->name);
     }
 
     public function testGetUnknownValue()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertNull($object->unknown);
     }
 
     public function testIsSet()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $this->assertFalse(isset($object->name));
         $object->name = 'Alex';
         $this->assertTrue(isset($object->name));
@@ -41,7 +41,7 @@ class MagicRepoItemTest extends Util\TestCase
 
     public function testSetAsSaved()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->name = 'Alex';
 
         // Test that name remains after save:
@@ -51,7 +51,7 @@ class MagicRepoItemTest extends Util\TestCase
 
     public function testChanges()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->name = 'Alex';
 
         $this->assertTrue($object->hasChanges());
@@ -62,7 +62,7 @@ class MagicRepoItemTest extends Util\TestCase
 
     public function testSaveClearsChanges()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
         $object->name = 'Alex';
         $object->city = 'London';
 
@@ -74,7 +74,7 @@ class MagicRepoItemTest extends Util\TestCase
 
     public function testLoadFromRepoResource()
     {
-        $object = $this->_newTraitObject();
+        $object = $this->newTraitObject();
 
         $object->loadFromRepoResource([
             'name' => 'Alex',

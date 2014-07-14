@@ -1,6 +1,7 @@
 <?php
 
 namespace Solution10\traitORM;
+
 use Solution10\traitORM\StorageDelegate;
 
 /**
@@ -54,7 +55,7 @@ trait Repository
         $sql .= implode(' = ?, ', array_keys($item->getChanges())) . ' = ?';
 
         $stmt = $this->_storage->prepare($sql);
-        foreach(array_values($item->getChanges()) as $idx => $value) {
+        foreach (array_values($item->getChanges()) as $idx => $value) {
             $stmt->bindValue($idx + 1, $value);
         }
 
@@ -77,7 +78,7 @@ trait Repository
         $sql .= ' WHERE ' . $this->primaryKey() . ' = ?';
 
         $stmt = $this->_storage->prepare($sql);
-        foreach(array_values($changed) as $idx => $value) {
+        foreach (array_values($changed) as $idx => $value) {
             $stmt->bindValue($idx + 1, $value);
         }
         $stmt->bindValue(count($changed)+1, $item->getValue($this->primaryKey()));
@@ -100,16 +101,16 @@ trait Repository
      */
     public function findById($id)
     {
-        $query = $this->_storage->prepare('
-            SELECT
+        $query = $this->_storage->prepare(
+            'SELECT
                 *
             FROM
                 `'.$this->tableName().'`
             WHERE
                 `'.$this->primaryKey().'` = :idValue
             LIMIT
-                1;
-        ');
+                1;'
+        );
         $query->bindValue('idValue', $id);
         $query->execute();
 
