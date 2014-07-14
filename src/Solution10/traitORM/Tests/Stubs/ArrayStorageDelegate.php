@@ -1,20 +1,13 @@
 <?php
 
-namespace Solution10\traitORM;
+namespace Solution10\traitORM\Tests\Stubs;
 
-/**
- * Interface StorageDelegate
- *
- * The storage delegate handles the actual reading and writing of an item.
- * traitORM provides a basic database provider for your usage, but you could
- * easily turn this into a REST service or the like.
- *
- * @package     Solution10\traitORM
- * @author      Alex Gisby <alex@solution10.com>
- * @license     MIT
- */
-interface StorageDelegateInterface
+use Solution10\traitORM\StorageDelegateInterface;
+
+class ArrayStorageDelegate implements StorageDelegateInterface
 {
+    protected $store = [];
+
     /**
      * Creates a new record in the data store.
      * $type is a broad type of this item, generally used as a hint for the storage delegate
@@ -28,7 +21,11 @@ interface StorageDelegateInterface
      * @param   array   $data   Data to store.
      * @return  mixed
      */
-    public function insertData($type, array $data);
+    public function insertData($type, array $data)
+    {
+        $this->store[$type][] = $data;
+        return count($this->store)-1;
+    }
 
     /**
      * Updates a record in the store. See insertData() for notes on $type.
@@ -38,7 +35,16 @@ interface StorageDelegateInterface
      * @param   array   $data   Data to update with
      * @return  mixed
      */
-    public function updateData($type, array $id, array $data);
+    public function updateData($type, array $id, array $data)
+    {
+        $pkValue = array_values($id)[0];
+
+        foreach ($data as $key => $value) {
+            $this->store[$type][$pkValue][$key] = $value;
+        }
+
+        return true;
+    }
 
 
     /**
@@ -48,7 +54,11 @@ interface StorageDelegateInterface
      * @param   array   $id     key-value pair denoting primary key field and value: ['user_id' => 1]
      * @return  bool            Whether the result was a success or not.
      */
-    public function deleteData($type, array $id);
+    public function deleteData($type, array $id)
+    {
+        $pkValue = array_values($id)[0];
+        unset($this->store[$type][$pkValue]);
+    }
 
     /**
      * Runs a query against the data store. This is left really open so you can decide what's best
@@ -60,5 +70,8 @@ interface StorageDelegateInterface
      * @param   mixed   $params
      * @return  mixed
      */
-    public function query($query, $params);
+    public function query($query, $params)
+    {
+        // TODO: work out what to do with this.
+    }
 }

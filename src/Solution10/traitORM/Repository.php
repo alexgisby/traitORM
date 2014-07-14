@@ -18,7 +18,7 @@ namespace Solution10\traitORM;
 trait Repository
 {
     /**
-     * @var     StorageDelegate
+     * @var     StorageDelegateInterface
      */
     protected $_storage;
 
@@ -53,10 +53,10 @@ trait Repository
     /**
      * Sets the storage delegate for this Repository.
      *
-     * @param   StorageDelegate     $storage
+     * @param   StorageDelegateInterface     $storage
      * @return  $this
      */
-    public function setConnection(StorageDelegate $storage)
+    public function setStorageDelegate(StorageDelegateInterface $storage)
     {
         $this->_storage = $storage;
         return $this;
@@ -79,8 +79,8 @@ trait Repository
     {
         // Work out if this item is saved or not for a save/update
         return ($item->isValueSet($this->primaryKeyField()))?
-                    $this->_updateItem($item)
-                    : $this->_createItem($item);
+                    $this->updateItem($item)
+                    : $this->createItem($item);
     }
 
     /**
