@@ -22,6 +22,8 @@ interface StorageDelegate
      *
      * $data should be a key-value array.
      *
+     * The return value should be the new primary key of this object!
+     *
      * @param   string  $type   A broad type for the storage delegate to use to know where to store this.
      * @param   array   $data   Data to store.
      * @return  mixed
@@ -44,7 +46,7 @@ interface StorageDelegate
      *
      * @param   string  $type   The broad type of this data as a hint for storage location.
      * @param   array   $id     key-value pair denoting primary key field and value: ['user_id' => 1]
-     * @return  mixed
+     * @return  bool            Whether the result was a success or not.
      */
     public function deleteData($type, array $id);
 
