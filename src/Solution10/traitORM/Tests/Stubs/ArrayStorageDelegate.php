@@ -6,7 +6,13 @@ use Solution10\traitORM\StorageDelegateInterface;
 
 class ArrayStorageDelegate implements StorageDelegateInterface
 {
-    protected $store = [];
+    /**
+     * Obviously, you'd never do this for real, it's just that the Unit Tests
+     * can look inside the store and verify things.
+     *
+     * @var     array
+     */
+    public $store = [];
 
     /**
      * Creates a new record in the data store.
@@ -74,4 +80,5 @@ class ArrayStorageDelegate implements StorageDelegateInterface
     {
         // TODO: work out what to do with this.
     }
+
 }
