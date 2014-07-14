@@ -64,6 +64,7 @@ class ArrayStorageDelegate implements StorageDelegateInterface
     {
         $pkValue = array_values($id)[0];
         unset($this->store[$type][$pkValue]);
+        return true;
     }
 
     /**

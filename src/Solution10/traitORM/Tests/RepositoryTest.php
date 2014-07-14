@@ -2,6 +2,9 @@
 
 namespace Solution10\traitORM\Tests;
 
+use Solution10\traitORM\Tests\Stubs\ArrayRepository;
+use Solution10\traitORM\Tests\Stubs\ArrayStorageDelegate;
+
 class RepositoryTest extends Util\TestCase
 {
     protected function newRepoObject()
@@ -76,6 +79,80 @@ class RepositoryTest extends Util\TestCase
         $this->assertInstanceOf('Solution10\\traitORM\\RepoItemInterface', $item);
     }
 
+    public function testCreateItem()
+    {
+        $storage = new ArrayStorageDelegate();
+        $repo = new ArrayRepository();
+        $repo->setStorageDelegate($storage);
 
+        // Go ahead and store an item:
+        $item = $repo->newRepoItem();
+        $item->setValue('name', 'Alex');
+        $repo->createItem($item);
 
+        // Verify that it's in the store and has an ID:
+        $this->assertTrue($item->isValueSet('id'));
+        $this->assertTrue(isset($storage->store['arraystore'][0]));
+        $this->assertEquals('Alex', $storage->store['arraystore'][0]['name']);
+    }
+
+    public function testUpdateItem()
+    {
+        $storage = new ArrayStorageDelegate();
+        $repo = new ArrayRepository();
+        $repo->setStorageDelegate($storage);
+
+        $item = $repo->newRepoItem();
+        $item->setValue('name', 'Alex');
+        $repo->createItem($item);
+
+        // Right, now edit this and re-store it:
+        $item->setValue('name', 'Monkey');
+        $this->assertTrue($item->hasChanges());
+        $repo->updateItem($item);
+        $this->assertFalse($item->hasChanges());
+
+        // Check that the data store has updated:
+        $this->assertEquals('Monkey', $storage->store['arraystore'][0]['name']);
+    }
+
+    public function testSaveItem()
+    {
+        $storage = new ArrayStorageDelegate();
+        $repo = new ArrayRepository();
+        $repo->setStorageDelegate($storage);
+
+        $item = $repo->newRepoItem();
+        $item->setValue('name', 'Alex');
+        $repo->saveItem($item);
+        $this->assertTrue($item->isValueSet('id'));
+        $this->assertTrue(isset($storage->store['arraystore'][0]));
+        $this->assertEquals('Alex', $storage->store['arraystore'][0]['name']);
+
+        // Right, now edit this and re-store it using saveItem()
+        $item->setValue('name', 'Monkey');
+        $this->assertTrue($item->hasChanges());
+        $repo->saveItem($item);
+        $this->assertFalse($item->hasChanges());
+
+        // Check that the data store has updated:
+        $this->assertEquals('Monkey', $storage->store['arraystore'][0]['name']);
+    }
+
+    public function testDeleteItem()
+    {
+        $storage = new ArrayStorageDelegate();
+        $repo = new ArrayRepository();
+        $repo->setStorageDelegate($storage);
+
+        $item = $repo->newRepoItem();
+        $item->setValue('name', 'Alex');
+        $repo->saveItem($item);
+
+        // Now delete the item:
+        $this->assertTrue($repo->deleteItem($item));
+
+        // Verify it's gone in the data store:
+        $this->assertFalse(isset($storage->store['arraystore'][0]));
+    }
 }

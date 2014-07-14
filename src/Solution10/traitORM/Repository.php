@@ -197,4 +197,16 @@ trait Repository
             [$this->primaryKeyField() => $item->getValue($this->primaryKeyField())]
         );
     }
+
+    /**
+     * -------------- READING functions ---------------
+     *
+     * traitORM provides some super basic queries built in, but you are encouraged
+     * to use the natural query process of your data store to talk to it.
+     */
+
+    public function fetchById()
+    {
+
+    }
 }
