@@ -92,4 +92,12 @@ interface RepoItemInterface
      * @return  $this
      */
     public function setAsSaved();
+
+    /**
+     * Whether this item has been loaded (or saved previously) to the database.
+     * Handy for assessing the state of findById() queries in repos.
+     *
+     * @return  bool
+     */
+    public function isLoaded();
 }

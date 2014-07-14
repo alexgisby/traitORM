@@ -155,4 +155,31 @@ class RepositoryTest extends Util\TestCase
         // Verify it's gone in the data store:
         $this->assertFalse(isset($storage->store['arraystore'][0]));
     }
+
+    public function testFindById()
+    {
+        $storage = new ArrayStorageDelegate();
+        $repo = new ArrayRepository();
+        $repo->setStorageDelegate($storage);
+
+        // Hard-insert an item to save faffing about:
+        $storage->store['arraystore'][0] = [
+            'id' => 1,
+            'name' => 'Alex'
+        ];
+
+        $item = $repo->findById(1);
+
+        $this->assertNotNull($item);
+        $this->assertEquals(1, $item->getValue('id'));
+        $this->assertEquals('Alex', $item->getValue('name'));
+    }
+
+    public function testFindByIdNotFound()
+    {
+        $repo = $this->newRepoObject();
+        $item = $repo->findById(27);
+
+        $this->assertFalse($item->isLoaded());
+    }
 }

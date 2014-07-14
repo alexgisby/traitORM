@@ -113,7 +113,7 @@ trait Repository
             );
         }
 
-        $item = call_user_func($this->factory, array($rawData));
+        $item = call_user_func_array($this->factory, array($rawData));
         return $item;
     }
 
@@ -205,8 +205,21 @@ trait Repository
      * to use the natural query process of your data store to talk to it.
      */
 
-    public function fetchById()
+    /**
+     * Fetches an item out of the repository by its ID
+     *
+     * @param   mixed   $id         ID to search for
+     * @return  RepoItemInterface
+     */
+    public function findById($id)
     {
+        $rawData = $this->_storage->findById([$this->primaryKeyField() => $id]);
+        if ($rawData !== null && !empty($rawData)) {
+            $item = $this->itemFactory($rawData[0]);
+        } else {
+            $item = $this->newRepoItem();
+        }
 
+        return $item;
     }
 }

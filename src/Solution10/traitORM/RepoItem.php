@@ -147,4 +147,15 @@ trait RepoItem
 
         return $this;
     }
+
+    /**
+     * Whether this item has been loaded (or saved previously) to the database.
+     * Handy for assessing the state of findById() queries in repos.
+     *
+     * @return  bool
+     */
+    public function isLoaded()
+    {
+        return !empty($this->_original);
+    }
 }

@@ -51,6 +51,14 @@ interface StorageDelegateInterface
     public function deleteData($type, array $id);
 
     /**
+     * Fetch an item by a given ID. One of the few built in queries to traitORM
+     *
+     * @param   array   $id     key-value pair denoting primary key field and value: ['user_id' => 1]
+     * @return  mixed           raw data representing this item or NULL if not found.
+     */
+    public function findById(array $id);
+
+    /**
      * Runs a query against the data store. This is left really open so you can decide what's best
      * for your data store.
      *

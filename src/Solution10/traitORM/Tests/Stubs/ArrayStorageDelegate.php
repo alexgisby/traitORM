@@ -68,10 +68,26 @@ class ArrayStorageDelegate implements StorageDelegateInterface
     }
 
     /**
-     * Runs a query against the data store. This is left really open so you can decide what's best
-     * for your data store.
+     * Fetch an item by a given ID. One of the few built in queries to traitORM
      *
-     * The result will be passed back in whatever format you deem best.
+     * @param   array   $id     key-value pair denoting primary key field and value: ['user_id' => 1]
+     * @return  mixed           raw data representing this item
+     */
+    public function findById(array $id)
+    {
+        $pkField = array_keys($id)[0];
+        $pkValue = array_values($id)[0];
+        return $this->query($pkField, $pkValue);
+    }
+
+    /**
+     * Runs a query against the data store.
+     *
+     * This is as basic as we get, loops through each item looking doing this:
+     *
+     *  $item[$query] == $value;
+     *
+     * If true, you get that item in the results.
      *
      * @param   mixed   $query
      * @param   mixed   $params
@@ -79,7 +95,14 @@ class ArrayStorageDelegate implements StorageDelegateInterface
      */
     public function query($query, $params)
     {
-        // TODO: work out what to do with this.
+        $results = array();
+        if (isset($this->store['arraystore'])) {
+            foreach ($this->store['arraystore'] as $data) {
+                if ($data[$query] === $params) {
+                    $results[] = $data;
+                }
+            }
+        }
+        return $results;
     }
-
 }

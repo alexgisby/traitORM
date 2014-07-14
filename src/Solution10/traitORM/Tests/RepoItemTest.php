@@ -135,4 +135,21 @@ class RepoItemTest extends Util\TestCase
         $this->assertEquals('Jake', $object->getOriginal('name'));
         $this->assertEquals('London', $object->getOriginal('city'));
     }
+
+    public function testIsLoaded()
+    {
+        $object = $this->newTraitObject();
+        $this->assertFalse($object->isLoaded());
+        $object->setValue('name', 'Alex');
+        $object->setAsSaved();
+        $this->assertTrue($object->isLoaded());
+
+        // And check if loaded from resource:
+        $loadedObject = $this->newTraitObject();
+        $loadedObject->loadFromRepoResource([
+            'id' => 1,
+            'name' => 'Alex',
+        ]);
+        $this->assertTrue($loadedObject->isLoaded());
+    }
 }
