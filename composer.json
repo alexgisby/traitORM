@@ -1,6 +1,6 @@
 {
-    "name": "Solution10/traitORM",
-    "description": "A trait based ORM using the Repository pattern",
+    "name": "Solution10/traitorm",
+    "description": "A trait based ORM using the Repository pattern. Experiment, shouldn't be used in the wild.",
     "minimum-stability": "stable",
     "license": "MIT",
     "authors": [
