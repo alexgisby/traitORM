@@ -1,5 +1,5 @@
 {
-    "name": "Solution10/traitorm",
+    "name": "solution10/traitorm",
     "description": "A trait based ORM using the Repository pattern. Experiment, shouldn't be used in the wild.",
     "minimum-stability": "stable",
     "license": "MIT",
